@@ -11,55 +11,88 @@ function AutomatedDialog.RequestStopDialog(dialog, instanceID)
   Osi.DialogRequestStopForDialog(dialog, Osi.DialogGetInvolvedNPC(instanceID, 1))
 end
 
+function AutomatedDialog.InitializeDialog(dialog, instanceID, currentTime)
+  -- Initialize tracking for a new dialog with its first occurrence.
+  Utils.DebugPrint(1, "Registering dialog " .. dialog .. " for the first time.")
+  -- TODO: add config option for default silencePeriod (to be used while we couldn't have calculated it yet)
+  AutomatedDialog.dialogs[dialog] = {
+    instances = { instanceID },
+    lastAllowed = currentTime,
+    duration = -1,      -- To be determined at the end of the first occurrence.
+    silencePeriod = -1, -- To be determined after the second occurrence.
+  }
+end
+
+function AutomatedDialog.HandleDialogSecondOccurrence(dialog, instanceID, currentTime)
+  -- After the first occurrence ends, calculate the silence period during the second occurrence.
+  AutomatedDialog.dialogs[dialog].silencePeriod = Interval.ElapsedTime(AutomatedDialog.dialogs[dialog].lastAllowed +
+    AutomatedDialog.dialogs[dialog].duration)
+  AutomatedDialog.dialogs[dialog].lastAllowed = currentTime
+  Utils.DebugPrint(0,
+    "Silence period for " .. dialog .. " is " .. AutomatedDialog.dialogs[dialog].silencePeriod .. " milliseconds.")
+
+  -- local shouldPostponeSecondOccurrence = JsonConfig.FEATURES.interval_options.first_silence_step
+  -- if shouldPostponeSecondOccurrence > 0 then
+  --   Utils.DebugPrint(2, "Postponing dialog " .. dialog .. " for " .. shouldPostponeSecondOccurrence .. " seconds.")
+  --   AutomatedDialog.RequestStopDialog(dialog, instanceID)
+  -- else
+  -- Don't add if postponed so that it still falls into this condition
+  table.insert(AutomatedDialog.dialogs[dialog].instances, instanceID)
+  -- end
+end
+
+function AutomatedDialog.BlockOrAllowDialog(dialog, instanceID, involvedNPCsDistance, currentTime)
+  if #AutomatedDialog.dialogs[dialog].instances == 1 then
+    AutomatedDialog.HandleDialogSecondOccurrence(dialog, instanceID, currentTime)
+  else
+    -- For the third and subsequent occurrences, use the established silence period to decide.
+    local elapsed = Interval.ElapsedTime(AutomatedDialog.dialogs[dialog].lastAllowed)
+    -- Get wait time for this dialog based on the number of instances so far, using a piecewise function, and the distance
+    local distanceToDialog = involvedNPCsDistance[1].Distance
+    local waitTime = Interval.GetWaitTime(dialog, distanceToDialog)
+    if AutomatedDialog.dialogs[dialog].silencePeriod == -1 or elapsed >= waitTime then
+      -- Enough time has elapsed, update lastAllowed timestamp and allow this dialog.
+      AutomatedDialog.dialogs[dialog].lastAllowed = currentTime
+      table.insert(AutomatedDialog.dialogs[dialog].instances, instanceID)
+      Utils.DebugPrint(1, "Dialog " .. dialog .. " allowed after " .. elapsed .. " milliseconds.")
+    else
+      -- Not enough time has elapsed, request to stop this dialog instance.
+      Utils.DebugPrint(2, "Postponing dialog " .. dialog .. " for " .. waitTime .. " seconds.")
+      AutomatedDialog.RequestStopDialog(dialog, instanceID)
+    end
+  end
+end
+
 --- Function to register or update automated dialog occurrence, and decide whether to allow it to proceed.
 ---@param dialog string @The dialog identifier.
 ---@param instanceID integer @The instance ID of the dialog.
-function HandleAutomatedDialog(dialog, instanceID)
+function AutomatedDialog.HandleAutomatedDialog(dialog, instanceID)
   local currentTime = Interval.GetCurrentTime()
+  local minNPCDistance = JsonConfig.FEATURES.min_distance
 
   if Osi.DialogGetNumberOfInvolvedPlayers(instanceID) > 0 then
     Utils.DebugPrint(2, "Ignoring dialog " .. dialog .. " involving players.")
     return
   end
 
-  -- TODO: use distance to calculate wait time
-  -- TODO: do not register occurrences if the dialog is too far away
-  local involvedNPCs = AutomatedDialog.GetInvolvedNPCsByDistance(instanceID)
+  local involvedNPCs = AutomatedDialog.GetInvolvedNPCs(instanceID)
+
+  if AutomatedDialog.CheckIfPartyInvolved(involvedNPCs) then
+    Utils.DebugPrint(1, "Ignoring dialog " .. dialog .. " involving party members.")
+    return
+  end
+
+  -- Check if the nearest NPC is too far away
+  local involvedNPCsDistance = GetInvolvedNPCsByDistance(involvedNPCs)
+  if involvedNPCsDistance[1].Distance > minNPCDistance then
+    Utils.DebugPrint(1, "Ignoring dialog " .. dialog .. " involving NPCs too far away.")
+    return
+  end
 
   if AutomatedDialog.dialogs[dialog] == nil then
-    -- Initialize tracking for a new dialog with its first occurrence.
-    Utils.DebugPrint(0, "Registering dialog " .. dialog .. " for the first time.")
-    -- TODO: add config option for default silencePeriod (to be used while we couldn't have calculated it yet)
-    AutomatedDialog.dialogs[dialog] = {
-      instances = { instanceID },
-      lastAllowed = currentTime,
-      duration = -1,      -- To be determined at the end of the first occurrence.
-      silencePeriod = -1, -- To be determined after the second occurrence.
-    }
+    AutomatedDialog.InitializeDialog(dialog, instanceID, currentTime)
   else
-    if #AutomatedDialog.dialogs[dialog].instances == 1 then
-      -- After the first occurrence ends, calculate the silence period during the second occurrence.
-      AutomatedDialog.dialogs[dialog].silencePeriod = Interval.ElapsedTime(AutomatedDialog.dialogs[dialog].lastAllowed +
-        AutomatedDialog.dialogs[dialog].duration)
-      Utils.DebugPrint(0,
-        "Silence period for " .. dialog .. " is " .. AutomatedDialog.dialogs[dialog].silencePeriod .. " milliseconds.")
-      table.insert(AutomatedDialog.dialogs[dialog].instances, instanceID)
-      AutomatedDialog.dialogs[dialog].lastAllowed = currentTime
-    else
-      -- For the third and subsequent occurrences, use the established silence period to decide.
-      local elapsed = Interval.ElapsedTime(AutomatedDialog.dialogs[dialog].lastAllowed)
-      -- Get wait time for this dialog based on the number of instances so far, using a piecewise function.
-      if AutomatedDialog.dialogs[dialog].silencePeriod == -1 or elapsed >= Interval.GetWaitTime(dialog) then
-        -- Enough time has elapsed, update lastAllowed timestamp and allow this dialog.
-        AutomatedDialog.dialogs[dialog].lastAllowed = currentTime
-        table.insert(AutomatedDialog.dialogs[dialog].instances, instanceID)
-        Utils.DebugPrint(0, "Dialog " .. dialog .. " allowed after " .. elapsed .. " milliseconds.")
-      else
-        -- Not enough time has elapsed, request to stop this dialog instance.
-        Utils.DebugPrint(2, "Postponing dialog " .. dialog .. " for 15000 milliseconds.")
-        AutomatedDialog.RequestStopDialog(dialog, instanceID)
-      end
-    end
+    AutomatedDialog.BlockOrAllowDialog(dialog, instanceID, involvedNPCsDistance, currentTime)
   end
 end
 
@@ -70,7 +103,7 @@ function AutomatedDialog.GetInvolvedNPCs(instanceID)
   local nInvolvedNPCs = Osi.DialogGetNumberOfInvolvedNPCs(instanceID)
   for i = 1, nInvolvedNPCs do
     local npcHandle = Osi.DialogGetInvolvedNPC(instanceID, i)
-    if npcHandle ~= nil then
+    if npcHandle ~= nil and Osi.IsCharacter(npcHandle) == 1 then
       table.insert(involvedNPCs, npcHandle)
     end
   end
@@ -78,34 +111,14 @@ function AutomatedDialog.GetInvolvedNPCs(instanceID)
   return involvedNPCs
 end
 
---- Returns a sorted table of involved NPCs by distance from the host character, including detailed info.
----@param involvedNPCs EntityHandle[] @List of NPC handles.
----@return table A table with details of involved NPCs: Entity, Guid, Distance, and Name, sorted by Distance.
-function AutomatedDialog.GetInvolvedNPCsByDistance(instanceID)
-  local hostCharacter = Osi.GetHostCharacter() -- Assuming this retrieves the player or designated character
-  local NPCsInfo = {}
-  local involvedNPCs = AutomatedDialog.GetInvolvedNPCs(instanceID)
-
-  for _, npcHandle in ipairs(involvedNPCs) do
-    local npcEntity = Ext.Entity.Get(npcHandle)
-    if npcEntity ~= nil then
-      local distance = Osi.GetDistanceTo(npcHandle, hostCharacter)
-      -- Collect detailed information for each NPC
-      table.insert(NPCsInfo, {
-        Entity = npcEntity,
-        Guid = npcEntity.Uuid.EntityUuid,
-        Distance = distance,
-        Name = Ext.Loca.GetTranslatedString(npcEntity.DisplayName.NameKey.Handle.Handle)
-      })
+function AutomatedDialog.CheckIfPartyInvolved(involvedNPCs)
+  for _, npc in ipairs(involvedNPCs) do
+    if Osi.IsInPartyWith(npc, Osi.GetHostCharacter()) == 1 then
+      return true
     end
   end
 
-  -- Sort the NPCs by distance in descending order
-  table.sort(NPCsInfo, function(a, b) return a.Distance > b.Distance end)
-
-  return NPCsInfo
+  return false
 end
-
-function AutomatedDialog.CheckIfPartyInvolved(character) end
 
 return AutomatedDialog

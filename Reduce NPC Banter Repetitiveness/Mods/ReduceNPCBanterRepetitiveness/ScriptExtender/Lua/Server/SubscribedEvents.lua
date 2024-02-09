@@ -7,7 +7,7 @@ local function SubscribeToEvents()
     Ext.Osiris.RegisterListener("AutomatedDialogEnded", 2, "after", EHandlers.OnAutomatedDialogEnded)
 
     Ext.Osiris.RegisterListener("AutomatedDialogForceStopping", 2, "after", function(dialog, instanceID)
-      Utils.DebugPrint(2, "AutomatedDialogForceStopping: " .. dialog .. " " .. instanceID)
+      Utils.DebugPrint(3, "AutomatedDialogForceStopping: " .. dialog .. " " .. instanceID)
     end)
 
     Ext.Osiris.RegisterListener("InstanceDialogChanged", 4, "after",

@@ -5,8 +5,8 @@ Config.configFilePath = "reduce_NPC_banter_repetitiveness_config.json"
 
 Config.defaultConfig = {
     FEATURES = {
+        min_distance = 24,                      -- Banter occurring within this distance in meters to your active character will be handled by the mod, otherwise it will repeat as in vanilla
         interval_options = {
-            min_distance = 24,                  -- Banter occurring within this distance in meters to your active character will be handled by the mod, otherwise it will repeat as in vanilla
             max_occurrences = -1,               -- -1 = banter can still repeat indefinitely, but will have different intervals from vanilla, 0 = disable repeating banter entirely. Any other number is the maximum number of times a banter can occur
             first_silence_step = 5,             -- How many seconds to postpone the first time a banter is repeated. This is desirable because we don't know the time between the first and second banter until the second banter occurs
 
@@ -15,6 +15,13 @@ Config.defaultConfig = {
 
             increase_indefinitely = false,      -- true = increase indefinitely, false = stop at maxTimeBetweenOccurrences
             random_intervals = true,            -- true = randomize intervals, false = increase with a square root function. Ignored if increaseIndefinitely is true.
+            distance_factor_scaling = {
+                enabled = true,
+                min_distance = 1,                 -- Distance in meters where the maximum penalty is applied
+                max_distance = 20,                -- Distance in meters beyond which the minimum penalty is applied
+                min_penalty_factor = 2.0,         -- Factor by which the interval is multiplied at or below minDistance (2.0 = double the interval)
+                max_penalty_factor = 1.0,         -- Factor by which the interval is multiplied at or beyond maxDistance (1.0 = no change to the interval)
+            },
         },
         vendor_options = {                      -- Options for vendors
             enabled = true,                     -- true = enable, false = use the same interval options for vendors as for regular NPCs
