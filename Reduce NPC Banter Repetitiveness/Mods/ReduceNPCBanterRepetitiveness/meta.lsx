@@ -8,7 +8,7 @@
         <node id="ModuleInfo">
           <attribute id="Author" type="LSString" value="Volitio" />
           <attribute id="CharacterCreationLevelName" type="FixedString" value="" />
-          <attribute id="Description" type="LSString" value="Dynamically reduce repetitive banter/'automated dialogue' from NPCs. Configurable through a JSON file." />
+          <attribute id="Description" type="LSString" value="Dynamically reduce repetitive banter/'automated dialog' from NPCs. Configurable through a JSON file." />
           <attribute id="Folder" type="LSString" value="ReduceNPCBanterRepetitiveness" />
           <attribute id="LobbyLevelName" type="FixedString" value="" />
           <attribute id="MD5" type="LSString" value="" />
