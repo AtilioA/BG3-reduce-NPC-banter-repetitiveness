@@ -58,6 +58,12 @@ function AutomatedDialog.HandleDialogSecondOccurrence(dialog, instanceID, curren
 end
 
 function AutomatedDialog.BlockOrAllowDialog(dialog, instanceID, involvedNPCsDistance, currentTime)
+  local bookOptions = JsonConfig.FEATURES.stop_banter_while_is_book_open
+  if bookOptions.enabled and bookOptions.stop_new_banter_as_well then
+    AutomatedDialog.RequestStopDialog(dialog, instanceID)
+    return
+  end
+
   if #AutomatedDialog.dialogs[dialog].instances == 1 then
     AutomatedDialog.HandleDialogSecondOccurrence(dialog, instanceID, currentTime)
   else
@@ -66,7 +72,8 @@ function AutomatedDialog.BlockOrAllowDialog(dialog, instanceID, involvedNPCsDist
     -- Get wait time for this dialog based on the number of instances so far, using a piecewise function, and the distance
     local distanceToDialog = involvedNPCsDistance[1].Distance
     local waitTime = Interval.GetWaitTime(dialog, distanceToDialog)
-    if AutomatedDialog.dialogs[dialog].silencePeriod == -1 or elapsed >= waitTime then
+    -- REFACTOR: simplify/move this logic to a separate function
+    if AutomatedDialog.dialogs[dialog].silencePeriod == -1 or elapsed >= waitTime or not (bookOptions.enabled and EHandlers.ReadingBook) then
       -- Enough time has elapsed, update lastAllowed timestamp and allow this dialog.
       AutomatedDialog.dialogs[dialog].lastAllowed = currentTime
       table.insert(AutomatedDialog.dialogs[dialog].instances, instanceID)
@@ -82,7 +89,7 @@ end
 function ShouldSkipDialogWithMaxOccurrences(dialog)
   local vendorOptionsEnabled = JsonConfig.FEATURES.vendor_options.enabled
   local involvesTrader = AutomatedDialog.DialogInvolvesTrader(dialog)
-  
+
   local maxOccurrences = JsonConfig.FEATURES.max_occurrences
   if vendorOptionsEnabled and involvesTrader then
     maxOccurrences = JsonConfig.FEATURES.vendor_options.max_occurrences
@@ -101,6 +108,8 @@ end
 function AutomatedDialog.HandleAutomatedDialog(dialog, instanceID)
   local currentTime = Interval.GetCurrentTime()
   local minNPCDistance = JsonConfig.FEATURES.min_distance
+
+  -- REFACTOR: simplify/modularize this logic
 
   if Osi.DialogGetNumberOfInvolvedPlayers(instanceID) > 0 then
     Utils.DebugPrint(2, "Ignoring dialog " .. dialog .. " involving players.")

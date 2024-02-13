@@ -1,5 +1,7 @@
 EHandlers = {}
 
+EHandlers.ReadingBook = false
+
 function EHandlers.OnAutomatedDialogStarted(dialog, instanceID)
   Utils.DebugPrint(2, "AutomatedDialogStarted: " .. dialog .. " " .. instanceID)
   AutomatedDialog.HandleAutomatedDialog(dialog, instanceID)
