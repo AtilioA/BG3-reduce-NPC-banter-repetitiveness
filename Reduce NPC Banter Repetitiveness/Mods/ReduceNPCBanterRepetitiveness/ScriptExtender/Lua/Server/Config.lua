@@ -6,8 +6,8 @@ Config.configFilePath = "reduce_NPC_banter_repetitiveness_config.json"
 Config.defaultConfig = {
     FEATURES = {
         min_distance = 24,            -- Banter occurring within this distance in meters to your active character will be handled by the mod, otherwise it will repeat as in vanilla
+        max_occurrences = -1,         -- -1 = banter can still repeat indefinitely, but will have different intervals from vanilla, 0 = disable repeating banter entirely. Any other number is the maximum number of times a banter can occur
         interval_options = {
-            max_occurrences = -1,     -- -1 = banter can still repeat indefinitely, but will have different intervals from vanilla, 0 = disable repeating banter entirely. Any other number is the maximum number of times a banter can occur
             first_silence_step = 5,   -- How many seconds to postpone the first time a banter is repeated. This is desirable because we don't know the time between the first and second banter until the second banter occurs
 
             min_interval_bonus = 5,   -- Time in seconds to add to the interval between banter occurrences

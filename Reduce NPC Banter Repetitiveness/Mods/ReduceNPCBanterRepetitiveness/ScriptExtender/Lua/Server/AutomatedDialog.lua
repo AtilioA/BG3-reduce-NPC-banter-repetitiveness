@@ -79,6 +79,22 @@ function AutomatedDialog.BlockOrAllowDialog(dialog, instanceID, involvedNPCsDist
   end
 end
 
+function ShouldSkipDialogWithMaxOccurrences(dialog)
+  local vendorOptionsEnabled = JsonConfig.FEATURES.vendor_options.enabled
+  local involvesTrader = AutomatedDialog.DialogInvolvesTrader(dialog)
+  
+  local maxOccurrences = JsonConfig.FEATURES.max_occurrences
+  if vendorOptionsEnabled and involvesTrader then
+    maxOccurrences = JsonConfig.FEATURES.vendor_options.max_occurrences
+  end
+
+  if maxOccurrences == -1 then
+    return false
+  elseif AutomatedDialog.dialogs and AutomatedDialog.dialogs[dialog] and AutomatedDialog.dialogs[dialog].instances and #AutomatedDialog.dialogs[dialog].instances > maxOccurrences then
+    return true
+  end
+end
+
 --- Function to register or update automated dialog occurrence, and decide whether to allow it to proceed.
 ---@param dialog string @The dialog identifier.
 ---@param instanceID integer @The instance ID of the dialog.
@@ -95,6 +111,11 @@ function AutomatedDialog.HandleAutomatedDialog(dialog, instanceID)
 
   if AutomatedDialog.CheckIfPartyInvolved(involvedNPCs) then
     Utils.DebugPrint(1, "Ignoring dialog " .. dialog .. " involving party members.")
+    return
+  end
+
+  if ShouldSkipDialogWithMaxOccurrences(dialog) then
+    Utils.DebugPrint(1, "Ignoring dialog " .. dialog .. " with maximum occurrences.")
     return
   end
 
