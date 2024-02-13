@@ -4,6 +4,12 @@ AutomatedDialog.dialogs = {}
 AutomatedDialog.handling_dialogs = {}
 AutomatedDialog.should_handle = {}
 
+function AutomatedDialog.ResetBanterIntervals()
+  AutomatedDialog.dialogs = {}
+  AutomatedDialog.handling_dialogs = {}
+  AutomatedDialog.should_handle = {}
+end
+
 --- Placeholder for logic to request stopping a dialog instance.
 ---@param dialog string
 ---@param instanceID integer

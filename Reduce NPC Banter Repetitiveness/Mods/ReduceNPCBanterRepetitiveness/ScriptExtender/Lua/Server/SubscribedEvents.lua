@@ -29,6 +29,15 @@ local function SubscribeToEvents()
           EHandlers.handling_dialogs[dialog] = false
           EHandlers.should_handle[dialog] = false
         end
+      elseif timer == "ResetBanterIntervals" then
+        Utils.DebugPrint(2, "TimerFinished: " .. timer)
+        AutomatedDialog.ResetBanterIntervals()
+      end
+    end)
+
+    Ext.Osiris.RegisterListener("LevelGameplayStarted", 2, "after", function(isEditorMode, levelName)
+      if JsonConfig.FEATURES.reset_conditions.cleanup_on_timer > 0 then
+        Osi.TimerLaunch("ResetBanterIntervals", JsonConfig.FEATURES.reset_conditions.cleanup_on_timer * 1000)
       end
     end)
   end
