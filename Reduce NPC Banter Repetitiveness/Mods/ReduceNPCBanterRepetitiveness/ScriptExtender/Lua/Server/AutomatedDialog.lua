@@ -83,7 +83,7 @@ function AutomatedDialog.BlockOrAllowDialog(dialog, instanceID, involvedNPCsDist
         string.format("\x1b[%dm%s\x1b[0m", 33, "Dialog " .. dialog .. " allowed after " .. elapsed .. " milliseconds."))
     else
       -- Not enough time has elapsed, request to stop this dialog instance.
-      Utils.DebugPrint(2, "Postponing dialog " .. dialog .. " for " .. waitTime .. " seconds.")
+      Utils.DebugPrint(2, "Postponing dialog " .. dialog .. " for " .. math.floor((waitTime - elapsed) / 1000) .. " more seconds.")
       AutomatedDialog.RequestStopDialog(dialog, instanceID)
     end
   end
