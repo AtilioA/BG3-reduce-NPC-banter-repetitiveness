@@ -84,8 +84,13 @@ function AutomatedDialog.HandleAutomatedDialog(dialog, instanceID)
 
   -- Check if the nearest NPC is too far away
   local involvedNPCsDistance = GetInvolvedNPCsByDistance(involvedNPCs)
-  if involvedNPCsDistance[1].Distance > minNPCDistance then
-    Utils.DebugPrint(1, "Ignoring dialog " .. dialog .. " involving NPCs too far away.")
+  if involvedNPCsDistance and involvedNPCsDistance[1] and involvedNPCsDistance[1].Distance then
+    if involvedNPCsDistance[1].Distance > minNPCDistance then
+      Utils.DebugPrint(1, "Ignoring dialog " .. dialog .. " involving NPCs too far away.")
+      return
+    end
+  else
+    Utils.DebugPrint(1, "Ignoring dialog " .. dialog .. ". No distance information available.")
     return
   end
 
