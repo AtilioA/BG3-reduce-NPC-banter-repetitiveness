@@ -67,9 +67,14 @@ function GetRandomWaitTime()
     return GetRandomInterval(minInterval, maxInterval)
 end
 
-function EnsureWaitTimeIsInRange(waitTime)
+function EnsureWaitTimeIsInRange(waitTime, dialog)
     local minWaitTime = JsonConfig.FEATURES.interval_options.min_wait_time
     local maxWaitTime = JsonConfig.FEATURES.interval_options.max_wait_time
+    
+    if JsonConfig.FEATURES.vendor_options.enabled and AutomatedDialog.DialogInvolvesTrader(dialog) then
+        minWaitTime = JsonConfig.FEATURES.vendor_options.min_interval_bonus
+        maxWaitTime = JsonConfig.FEATURES.vendor_options.max_interval_bonus
+    end
 
     if maxWaitTime == -1 then
         return math.max(minWaitTime, waitTime)
@@ -95,7 +100,7 @@ function Interval.GetWaitTime(dialog, distanceToDialog)
             "Based on the distance of " ..
             distanceToDialog .. " meters, the wait time is " .. waitTime .. " milliseconds.")
 
-        local boundedWaitTime = EnsureWaitTimeIsInRange(waitTime)
+        local boundedWaitTime = EnsureWaitTimeIsInRange(waitTime, dialog)
 
         return boundedWaitTime
     end

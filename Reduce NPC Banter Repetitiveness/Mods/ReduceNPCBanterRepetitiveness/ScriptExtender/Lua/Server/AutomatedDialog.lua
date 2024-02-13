@@ -10,6 +10,16 @@ function AutomatedDialog.ResetBanterIntervals()
   AutomatedDialog.should_handle = {}
 end
 
+function AutomatedDialog.DialogInvolvesTrader(dialog)
+  local involvedNPCs = Osi.GetInvolvedNPCs(dialog)
+  for _, npc in ipairs(involvedNPCs) do
+    -- REVIEW: this probably is not the right way to check if a character is a trader
+    if Osi.CanTrade(npc) == 1 then
+      return true
+    end
+  end
+end
+
 --- Placeholder for logic to request stopping a dialog instance.
 ---@param dialog string
 ---@param instanceID integer
