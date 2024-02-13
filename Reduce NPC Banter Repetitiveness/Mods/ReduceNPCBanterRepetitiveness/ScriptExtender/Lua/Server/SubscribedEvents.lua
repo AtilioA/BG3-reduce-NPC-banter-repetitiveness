@@ -2,13 +2,15 @@ local function SubscribeToEvents()
   if JsonConfig.GENERAL.enabled == true then
     Utils.DebugPrint(2, "Subscribing to events with JSON config: " .. Ext.Json.Stringify(JsonConfig, { Beautify = true }))
 
+    Ext.Osiris.RegisterListener("UseStarted", 2, "after", EHandlers.OnUseStarted)
+
+    Ext.Osiris.RegisterListener("UseFinished", 2, "after", EHandlers.OnUseFinished)
+
     Ext.Osiris.RegisterListener("AutomatedDialogStarted", 2, "before", EHandlers.OnAutomatedDialogStarted)
 
     Ext.Osiris.RegisterListener("AutomatedDialogEnded", 2, "after", EHandlers.OnAutomatedDialogEnded)
 
-    Ext.Osiris.RegisterListener("AutomatedDialogForceStopping", 2, "after", function(dialog, instanceID)
-      Utils.DebugPrint(3, "AutomatedDialogForceStopping: " .. dialog .. " " .. instanceID)
-    end)
+    Ext.Osiris.RegisterListener("AutomatedDialogForceStopping", 2, "after", EHandlers.OnAutomatedDialogForceStopping)
 
     Ext.Osiris.RegisterListener("InstanceDialogChanged", 4, "after",
       function(oldDialog, oldDialogStopping, instanceID, newDialog)
@@ -16,30 +18,9 @@ local function SubscribeToEvents()
           "InstanceDialogChanged: " .. oldDialog .. " " .. oldDialogStopping .. " " .. instanceID .. " " .. newDialog)
       end)
 
-    Ext.Osiris.RegisterListener("NestedDialogPlayed", 2, "after", function(dialog, instanceID)
-      Utils.DebugPrint(2, "NestedDialogPlayed: " .. dialog .. " " .. instanceID)
-    end)
+    Ext.Osiris.RegisterListener("TimerFinished", 1, "after", EHandlers.OnTimerFinished)
 
-    Ext.Osiris.RegisterListener("TimerFinished", 1, "after", function(timer)
-      -- if timer begins with "PostponeDialog" then...
-      if string.find(timer, "PostponeDialog") == 1 then
-        Utils.DebugPrint(2, "TimerFinished: " .. timer)
-        local dialog = string.sub(timer, 15)
-        if EHandlers.dialogs[dialog] and EHandlers.dialogs[dialog].instances and #EHandlers.dialogs[dialog].instances > 0 then
-          EHandlers.handling_dialogs[dialog] = false
-          EHandlers.should_handle[dialog] = false
-        end
-      elseif timer == "ResetBanterIntervals" then
-        Utils.DebugPrint(2, "TimerFinished: " .. timer)
-        AutomatedDialog.ResetBanterIntervals()
-      end
-    end)
-
-    Ext.Osiris.RegisterListener("LevelGameplayStarted", 2, "after", function(isEditorMode, levelName)
-      if JsonConfig.FEATURES.reset_conditions.cleanup_on_timer > 0 then
-        Osi.TimerLaunch("ResetBanterIntervals", JsonConfig.FEATURES.reset_conditions.cleanup_on_timer * 1000)
-      end
-    end)
+    Ext.Osiris.RegisterListener("LevelGameplayStarted", 2, "after")
   end
 end
 

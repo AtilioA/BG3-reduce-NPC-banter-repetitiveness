@@ -16,4 +16,47 @@ function EHandlers.OnAutomatedDialogEnded(dialog, instanceID)
   AutomatedDialog.dialogs[dialog].duration = Interval.ElapsedTime(AutomatedDialog.dialogs[dialog].lastAllowed)
 end
 
+function EHandlers.OnUseFinished(character, item, result)
+  if (Osi.IsInPartyWith(character, Osi.GetHostCharacter()) == 1) then
+    Utils.DebugPrint(2, "UseFinished: " .. character .. " " .. item .. " " .. tostring(Osi.GetBookID(item)))
+    if Osi.GetBookID(item) > 0 then
+      EHandlers.ReadingBook = false
+    end
+  end
+end
+
+function EHandlers.OnUseStarted(character, item)
+  if (Osi.IsInPartyWith(character, Osi.GetHostCharacter()) == 1) then
+    Utils.DebugPrint(2, "UseStarted: " .. character .. " " .. item .. " " .. tostring(Osi.GetBookID(item)))
+    if Osi.GetBookID(item) > 0 then
+      EHandlers.ReadingBook = true
+    end
+  end
+end
+
+function EHandlers.OnTimerFinished(timer)
+  -- if timer begins with "PostponeDialog" then...
+  if string.find(timer, "PostponeDialog") == 1 then
+    Utils.DebugPrint(2, "TimerFinished: " .. timer)
+    local dialog = string.sub(timer, 15)
+    if EHandlers.dialogs[dialog] and EHandlers.dialogs[dialog].instances and #EHandlers.dialogs[dialog].instances > 0 then
+      EHandlers.handling_dialogs[dialog] = false
+      EHandlers.should_handle[dialog] = false
+    end
+  elseif timer == "ResetBanterIntervals" then
+    Utils.DebugPrint(2, "TimerFinished: " .. timer)
+    AutomatedDialog.ResetBanterIntervals()
+  end
+end
+
+function EHandlers.OnLevelGameplayStarted(isEditorMode, levelName)
+  if JsonConfig.FEATURES.reset_conditions.cleanup_on_timer > 0 then
+    Osi.TimerLaunch("ResetBanterIntervals", JsonConfig.FEATURES.reset_conditions.cleanup_on_timer * 1000)
+  end
+end
+
+function EHandlers.OnAutomatedDialogForceStopping(dialog, instanceID)
+  Utils.DebugPrint(3, "AutomatedDialogForceStopping: " .. dialog .. " " .. instanceID)
+end
+
 return EHandlers
