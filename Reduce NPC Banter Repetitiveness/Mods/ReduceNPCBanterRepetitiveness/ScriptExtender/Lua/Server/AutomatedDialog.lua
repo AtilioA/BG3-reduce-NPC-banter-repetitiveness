@@ -10,8 +10,8 @@ function AutomatedDialog.ResetBanterIntervals()
   AutomatedDialog.should_handle = {}
 end
 
-function AutomatedDialog.DialogInvolvesTrader(dialog)
-  local involvedNPCs = Osi.GetInvolvedNPCs(dialog)
+function AutomatedDialog.DialogInvolvesTrader(instanceID)
+  local involvedNPCs = AutomatedDialog.GetInvolvedNPCs(instanceID)
   for _, npc in ipairs(involvedNPCs) do
     -- REVIEW: this probably is not the right way to check if a character is a trader
     if Osi.CanTrade(npc) == 1 then
@@ -88,7 +88,7 @@ end
 
 function ShouldSkipDialogWithMaxOccurrences(dialog)
   local vendorOptionsEnabled = JsonConfig.FEATURES.vendor_options.enabled
-  local involvesTrader = AutomatedDialog.DialogInvolvesTrader(dialog)
+  local involvesTrader = false --AutomatedDialog.DialogInvolvesTrader(dialog)
 
   local maxOccurrences = JsonConfig.FEATURES.max_occurrences
   if vendorOptionsEnabled and involvesTrader then

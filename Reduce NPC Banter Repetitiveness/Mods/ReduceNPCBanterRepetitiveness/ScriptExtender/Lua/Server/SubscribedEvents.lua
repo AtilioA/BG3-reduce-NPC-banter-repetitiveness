@@ -4,11 +4,11 @@ local function SubscribeToEvents()
 
     Ext.Osiris.RegisterListener("UseStarted", 2, "after", EHandlers.OnUseStarted)
 
-    Ext.Osiris.RegisterListener("UseFinished", 2, "after", EHandlers.OnUseFinished)
+    Ext.Osiris.RegisterListener("UseFinished", 3, "after", EHandlers.OnUseFinished)
 
     Ext.Osiris.RegisterListener("AutomatedDialogStarted", 2, "before", EHandlers.OnAutomatedDialogStarted)
 
-    Ext.Osiris.RegisterListener("AutomatedDialogEnded", 2, "after", EHandlers.OnAutomatedDialogEnded)
+    -- Ext.Osiris.RegisterListener("AutomatedDialogEnded", 2, "after", EHandlers.OnAutomatedDialogEnded)
 
     Ext.Osiris.RegisterListener("AutomatedDialogForceStopping", 2, "after", EHandlers.OnAutomatedDialogForceStopping)
 
@@ -20,7 +20,7 @@ local function SubscribeToEvents()
 
     Ext.Osiris.RegisterListener("TimerFinished", 1, "after", EHandlers.OnTimerFinished)
 
-    Ext.Osiris.RegisterListener("LevelGameplayStarted", 2, "after")
+    Ext.Osiris.RegisterListener("LevelGameplayStarted", 2, "after", EHandlers.OnLevelGameplayStarted)
   end
 end
 
