@@ -27,10 +27,6 @@ Config.defaultConfig = {
             min_interval_bonus = 0, -- Time in seconds
             max_interval_bonus = 0, -- time in seconds (-1 = unlimited, will increase with a square root function)
         },
-        stop_banter_while_is_book_open = {
-            enabled = true,                  -- Stop repetitive banter entirely while book UI is open, play them after book is closed. Intervals won't increase while the book is open
-            stop_new_banter_as_well = false, -- Will stop even banter that has not been heard yet (can be buggy)
-        },
         reset_conditions = {
             -- cleanup_on_events = { -- Events triggering cleanup of the banter queue/intervals
             --     ["LongRestStarted"] = true,

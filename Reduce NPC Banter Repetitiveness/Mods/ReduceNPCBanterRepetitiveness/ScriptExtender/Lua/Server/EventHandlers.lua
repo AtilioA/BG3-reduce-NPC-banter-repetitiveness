@@ -1,7 +1,5 @@
 EHandlers = {}
 
-EHandlers.ReadingBook = false
-
 function EHandlers.OnAutomatedDialogStarted(dialog, instanceID)
   Utils.DebugPrint(2, "AutomatedDialogStarted: " .. dialog .. " " .. instanceID)
   AutomatedDialog.HandleAutomatedDialog(dialog, instanceID)
@@ -14,24 +12,6 @@ function EHandlers.OnAutomatedDialogEnded(dialog, instanceID)
     return
   end
   AutomatedDialog.dialogs[dialog].duration = Interval.ElapsedTime(AutomatedDialog.dialogs[dialog].lastAllowed)
-end
-
-function EHandlers.OnUseFinished(character, item, result)
-  if (Osi.IsInPartyWith(character, Osi.GetHostCharacter()) == 1) then
-    Utils.DebugPrint(2, "UseFinished: " .. character .. " " .. item .. " " .. tostring(Osi.GetBookID(item)))
-    if Osi.GetBookID(item) > 0 then
-      EHandlers.ReadingBook = false
-    end
-  end
-end
-
-function EHandlers.OnUseStarted(character, item)
-  if (Osi.IsInPartyWith(character, Osi.GetHostCharacter()) == 1) then
-    Utils.DebugPrint(2, "UseStarted: " .. character .. " " .. item .. " " .. tostring(Osi.GetBookID(item)))
-    if Osi.GetBookID(item) > 0 then
-      EHandlers.ReadingBook = true
-    end
-  end
 end
 
 function EHandlers.OnTimerFinished(timer)

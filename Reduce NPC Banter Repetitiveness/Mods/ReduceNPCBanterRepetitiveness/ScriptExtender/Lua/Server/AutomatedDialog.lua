@@ -58,12 +58,6 @@ function AutomatedDialog.HandleDialogSecondOccurrence(dialog, instanceID, curren
 end
 
 function AutomatedDialog.BlockOrAllowDialog(dialog, instanceID, involvedNPCsDistance, currentTime)
-  local bookOptions = JsonConfig.FEATURES.stop_banter_while_is_book_open
-  if bookOptions.enabled and bookOptions.stop_new_banter_as_well then
-    AutomatedDialog.RequestStopDialog(dialog, instanceID)
-    return
-  end
-
   if #AutomatedDialog.dialogs[dialog].instances == 1 then
     AutomatedDialog.HandleDialogSecondOccurrence(dialog, instanceID, currentTime)
   else
@@ -73,7 +67,7 @@ function AutomatedDialog.BlockOrAllowDialog(dialog, instanceID, involvedNPCsDist
     local distanceToDialog = involvedNPCsDistance[1].Distance
     local waitTime = Interval.GetWaitTime(dialog, distanceToDialog)
     -- REFACTOR: simplify/move this logic to a separate function
-    if AutomatedDialog.dialogs[dialog].silencePeriod == -1 or elapsed >= waitTime or not (bookOptions.enabled and EHandlers.ReadingBook) then
+    if AutomatedDialog.dialogs[dialog].silencePeriod == -1 or elapsed >= waitTime then
       -- Enough time has elapsed, update lastAllowed timestamp and allow this dialog.
       AutomatedDialog.dialogs[dialog].lastAllowed = currentTime
       table.insert(AutomatedDialog.dialogs[dialog].instances, instanceID)
