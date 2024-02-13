@@ -67,14 +67,10 @@ function GetRandomWaitTime()
     return GetRandomInterval(minInterval, maxInterval)
 end
 
+-- FIXME: this is borked (always returns JsonConfig.FEATURES.interval_options.max_interval_bonus somehow)
 function EnsureWaitTimeIsInRange(waitTime, dialog)
     local minWaitTime = JsonConfig.FEATURES.interval_options.min_interval_bonus
     local maxWaitTime = JsonConfig.FEATURES.interval_options.max_interval_bonus
-
-    if JsonConfig.FEATURES.vendor_options.enabled and false then -- AutomatedDialog.DialogInvolvesTrader(dialog) then
-        minWaitTime = JsonConfig.FEATURES.vendor_options.min_interval_bonus
-        maxWaitTime = JsonConfig.FEATURES.vendor_options.max_interval_bonus
-    end
 
     if maxWaitTime == -1 then
         return math.max(minWaitTime, waitTime)
@@ -86,21 +82,25 @@ end
 -- Function to calculate the wait time for a dialog
 function Interval.GetWaitTime(dialog, distanceToDialog)
     if AutomatedDialog.dialogs and AutomatedDialog.dialogs[dialog] and AutomatedDialog.dialogs[dialog].instances then
-        local intervalTime = GetRandomWaitTime()
+        local intervalTime = 0
         local shouldUseRandomInterval = JsonConfig.FEATURES.interval_options.random_intervals and
-            JsonConfig.FEATURES.interval_options.max_interval_bonus > 0
+            JsonConfig.FEATURES.interval_options.max_interval_bonus ~= -1
+
         if shouldUseRandomInterval then
+            intervalTime = GetRandomWaitTime()
+        else
             intervalTime = PiecewiseFunction(#AutomatedDialog.dialogs[dialog].instances or 0)
         end
-        Utils.DebugPrint(1, "Wait time for " .. dialog .. " is " .. intervalTime .. " seconds.")
 
+        Utils.DebugPrint(1, "Wait time for " .. dialog .. " is " .. intervalTime .. " seconds.")
         local waitTime = intervalTime * 1000
         waitTime = CalculateWaitFactorScaling(waitTime, distanceToDialog)
+
+        local boundedWaitTime = EnsureWaitTimeIsInRange(waitTime, dialog)
+
         Utils.DebugPrint(1,
             "Based on the distance of " ..
             distanceToDialog .. " meters, the wait time is " .. waitTime .. " milliseconds.")
-
-        local boundedWaitTime = EnsureWaitTimeIsInRange(waitTime, dialog)
 
         return boundedWaitTime
     end

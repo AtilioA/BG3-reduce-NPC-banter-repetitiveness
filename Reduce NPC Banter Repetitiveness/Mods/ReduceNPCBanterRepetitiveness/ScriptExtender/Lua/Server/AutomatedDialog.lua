@@ -61,17 +61,26 @@ function AutomatedDialog.BlockOrAllowDialog(dialog, instanceID, involvedNPCsDist
   if #AutomatedDialog.dialogs[dialog].instances == 1 then
     AutomatedDialog.HandleDialogSecondOccurrence(dialog, instanceID, currentTime)
   else
-    -- For the third and subsequent occurrences, use the established silence period to decide.
     local elapsed = Interval.ElapsedTime(AutomatedDialog.dialogs[dialog].lastAllowed)
-    -- Get wait time for this dialog based on the number of instances so far, using a piecewise function, and the distance
+    local firstSilenceStep = JsonConfig.FEATURES.interval_options.first_silence_step
+    if AutomatedDialog.dialogs[dialog].silencePeriod == -1 and firstSilenceStep ~= -1 then
+      elapsed = elapsed - firstSilenceStep
+    else
+      -- For the third and subsequent occurrences, use the established silence period to decide.
+      elapsed = elapsed - AutomatedDialog.dialogs[dialog].silencePeriod
+    end
+
+    -- Get wait time for this dialog based on the number of instances so far, using a piecewise function/random interval, and the distance
     local distanceToDialog = involvedNPCsDistance[1].Distance
     local waitTime = Interval.GetWaitTime(dialog, distanceToDialog)
     -- REFACTOR: simplify/move this logic to a separate function
-    if AutomatedDialog.dialogs[dialog].silencePeriod == -1 or elapsed >= waitTime then
+    if elapsed >= waitTime then
       -- Enough time has elapsed, update lastAllowed timestamp and allow this dialog.
       AutomatedDialog.dialogs[dialog].lastAllowed = currentTime
       table.insert(AutomatedDialog.dialogs[dialog].instances, instanceID)
-      Utils.DebugPrint(1, "Dialog " .. dialog .. " allowed after " .. elapsed .. " milliseconds.")
+
+      Utils.DebugPrint(1,
+        string.format("\x1b[%dm%s\x1b[0m", 33, "Dialog " .. dialog .. " allowed after " .. elapsed .. " milliseconds."))
     else
       -- Not enough time has elapsed, request to stop this dialog instance.
       Utils.DebugPrint(2, "Postponing dialog " .. dialog .. " for " .. waitTime .. " seconds.")
@@ -113,12 +122,12 @@ function AutomatedDialog.HandleAutomatedDialog(dialog, instanceID)
   local involvedNPCs = AutomatedDialog.GetInvolvedNPCs(instanceID)
 
   if AutomatedDialog.CheckIfPartyInvolved(involvedNPCs) then
-    Utils.DebugPrint(1, "Ignoring dialog " .. dialog .. " involving party members.")
+    Utils.DebugPrint(2, "Ignoring dialog " .. dialog .. " involving party members.")
     return
   end
 
   if ShouldSkipDialogWithMaxOccurrences(dialog) then
-    Utils.DebugPrint(1, "Ignoring dialog " .. dialog .. " with maximum occurrences.")
+    Utils.DebugPrint(2, "Ignoring dialog " .. dialog .. " with maximum occurrences.")
     return
   end
 
@@ -126,11 +135,11 @@ function AutomatedDialog.HandleAutomatedDialog(dialog, instanceID)
   local involvedNPCsDistance = GetInvolvedNPCsByDistance(involvedNPCs)
   if involvedNPCsDistance and involvedNPCsDistance[1] and involvedNPCsDistance[1].Distance then
     if involvedNPCsDistance[1].Distance > minNPCDistance then
-      Utils.DebugPrint(1, "Ignoring dialog " .. dialog .. " involving NPCs too far away.")
+      Utils.DebugPrint(3, "Ignoring dialog " .. dialog .. " involving NPCs too far away.")
       return
     end
   else
-    Utils.DebugPrint(1, "Ignoring dialog " .. dialog .. ". No distance information available.")
+    Utils.DebugPrint(2, "Ignoring dialog " .. dialog .. ". No distance information available.")
     return
   end
 
