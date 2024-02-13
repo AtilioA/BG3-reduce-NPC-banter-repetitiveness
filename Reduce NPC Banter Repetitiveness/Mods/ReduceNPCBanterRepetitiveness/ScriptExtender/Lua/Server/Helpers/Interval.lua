@@ -61,8 +61,8 @@ function GetRandomInterval(min, max)
 end
 
 function GetRandomWaitTime()
-    local minInterval = JsonConfig.FEATURES.interval_options.min_time_between_occurrences
-    local maxInterval = JsonConfig.FEATURES.interval_options.max_time_between_occurrences
+    local minInterval = JsonConfig.FEATURES.interval_options.min_interval_bonus
+    local maxInterval = JsonConfig.FEATURES.interval_options.max_interval_bonus
 
     return GetRandomInterval(minInterval, maxInterval)
 end
@@ -82,7 +82,8 @@ end
 function Interval.GetWaitTime(dialog, distanceToDialog)
     if AutomatedDialog.dialogs and AutomatedDialog.dialogs[dialog] and AutomatedDialog.dialogs[dialog].instances then
         local intervalTime = GetRandomWaitTime()
-        local shouldUseRandomInterval = JsonConfig.FEATURES.interval_options.random_intervals
+        local shouldUseRandomInterval = JsonConfig.FEATURES.interval_options.random_intervals and
+            JsonConfig.FEATURES.interval_options.max_interval_bonus > 0
         if shouldUseRandomInterval then
             intervalTime = PiecewiseFunction(#AutomatedDialog.dialogs[dialog].instances or 0)
         end
@@ -93,7 +94,6 @@ function Interval.GetWaitTime(dialog, distanceToDialog)
         Utils.DebugPrint(1,
             "Based on the distance of " ..
             distanceToDialog .. " meters, the wait time is " .. waitTime .. " milliseconds.")
-
 
         local boundedWaitTime = EnsureWaitTimeIsInRange(waitTime)
 
