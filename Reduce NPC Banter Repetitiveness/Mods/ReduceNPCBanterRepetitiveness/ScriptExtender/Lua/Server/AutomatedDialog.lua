@@ -82,7 +82,7 @@ end
 
 function ShouldSkipDialogWithMaxOccurrences(dialog)
   local vendorOptionsEnabled = JsonConfig.FEATURES.vendor_options.enabled
-  local involvesTrader = false --AutomatedDialog.DialogInvolvesTrader(dialog)
+  local involvesTrader = false -- AutomatedDialog.DialogInvolvesTrader(dialog)
 
   local maxOccurrences = JsonConfig.FEATURES.max_occurrences
   if vendorOptionsEnabled and involvesTrader then

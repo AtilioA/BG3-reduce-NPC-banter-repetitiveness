@@ -2,10 +2,6 @@ local function SubscribeToEvents()
   if JsonConfig.GENERAL.enabled == true then
     Utils.DebugPrint(2, "Subscribing to events with JSON config: " .. Ext.Json.Stringify(JsonConfig, { Beautify = true }))
 
-    Ext.Osiris.RegisterListener("UseStarted", 2, "after", EHandlers.OnUseStarted)
-
-    Ext.Osiris.RegisterListener("UseFinished", 3, "after", EHandlers.OnUseFinished)
-
     Ext.Osiris.RegisterListener("AutomatedDialogStarted", 2, "before", EHandlers.OnAutomatedDialogStarted)
 
     -- Ext.Osiris.RegisterListener("AutomatedDialogEnded", 2, "after", EHandlers.OnAutomatedDialogEnded)
