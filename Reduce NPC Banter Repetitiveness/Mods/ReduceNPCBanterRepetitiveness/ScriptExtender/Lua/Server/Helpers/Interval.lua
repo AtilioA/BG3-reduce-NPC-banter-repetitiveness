@@ -42,7 +42,7 @@ function CalculateWaitFactorScaling(waitTime, distanceToDialog)
         -- This approach uses the logarithmic scaling relative to the distance range
         local logBase = 10
         local scaledDistance = (distanceToDialog - minDistance) / (maxDistance - minDistance)
-         -- Logarithmically scale distance
+        -- Logarithmically scale distance
         local logDistance = math.log(1 + scaledDistance * (logBase - 1)) /
             math.log(logBase)
 
@@ -56,17 +56,48 @@ function CalculateWaitFactorScaling(waitTime, distanceToDialog)
     return waitTime
 end
 
+function GetRandomInterval(min, max)
+    return math.random(min, max)
+end
+
+function GetRandomWaitTime()
+    local minInterval = JsonConfig.FEATURES.interval_options.min_time_between_occurrences
+    local maxInterval = JsonConfig.FEATURES.interval_options.max_time_between_occurrences
+
+    return GetRandomInterval(minInterval, maxInterval)
+end
+
+function EnsureWaitTimeIsInRange(waitTime)
+    local minWaitTime = JsonConfig.FEATURES.interval_options.min_wait_time
+    local maxWaitTime = JsonConfig.FEATURES.interval_options.max_wait_time
+
+    if maxWaitTime == -1 then
+        return math.max(minWaitTime, waitTime)
+    else
+        return math.max(minWaitTime, math.min(waitTime, maxWaitTime))
+    end
+end
+
 -- Function to calculate the wait time for a dialog
 function Interval.GetWaitTime(dialog, distanceToDialog)
     if AutomatedDialog.dialogs and AutomatedDialog.dialogs[dialog] and AutomatedDialog.dialogs[dialog].instances then
-        local funcValue = PiecewiseFunction(#AutomatedDialog.dialogs[dialog].instances or 0)
-        Utils.DebugPrint(1, "Wait time for " .. dialog .. " is " .. funcValue .. " seconds.")
-        local waitTime = funcValue * 1000
+        local intervalTime = GetRandomWaitTime()
+        local shouldUseRandomInterval = JsonConfig.FEATURES.interval_options.random_intervals
+        if shouldUseRandomInterval then
+            intervalTime = PiecewiseFunction(#AutomatedDialog.dialogs[dialog].instances or 0)
+        end
+        Utils.DebugPrint(1, "Wait time for " .. dialog .. " is " .. intervalTime .. " seconds.")
+
+        local waitTime = intervalTime * 1000
         waitTime = CalculateWaitFactorScaling(waitTime, distanceToDialog)
         Utils.DebugPrint(1,
             "Based on the distance of " ..
             distanceToDialog .. " meters, the wait time is " .. waitTime .. " milliseconds.")
-        return waitTime
+
+
+        local boundedWaitTime = EnsureWaitTimeIsInRange(waitTime)
+
+        return boundedWaitTime
     end
 end
 
