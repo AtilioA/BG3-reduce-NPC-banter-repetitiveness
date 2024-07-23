@@ -1,5 +1,5 @@
 {
-    "RequiredVersion": 13,
+    "RequiredVersion": 18,
     "ModTable": "ReduceNPCBanterRepetitiveness",
     "FeatureFlags": [
         "Lua"

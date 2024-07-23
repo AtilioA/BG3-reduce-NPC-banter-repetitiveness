@@ -1,0 +1,279 @@
+{
+    "SchemaVersion": 1,
+    "ModName": "Reduce NPC Banter Repetitiveness",
+    "Tabs": [
+        {
+            "TabId": "general",
+            "TabName": "General",
+            "Settings": [
+                {
+                    "Id": "mod_enabled",
+                    "Name": "Enabled",
+                    "Type": "checkbox",
+                    "Default": true,
+                    "Description": "Toggle the mod on/off without having to uninstall it.",
+                    "Handles": {
+                        "DescriptionHandle": "hac6189beeac24a319733a69e9153a24edffb",
+                        "NameHandle": "hc116181043c04c168e06ff11fce144e24136"
+                    }
+                },
+                {
+                    "Id": "min_distance",
+                    "Name": "Minimum distance (meters)",
+                    "Type": "slider_int",
+                    "Default": 24,
+                    "Options": {
+                        "Min": 1,
+                        "Max": 50
+                    },
+                    "Description": "Banter occurring within this distance in meters to your active character will be handled by the mod.\nIf not within this distance, the banter will repeat as in vanilla.\n3m = ~10ft",
+                    "Handles": {
+                        "DescriptionHandle": "h70142a25542e4dbd99234b827c55991c9f56",
+                        "NameHandle": "hca8b5a9155d4448bb0e1322d22fb366d442d"
+                    }
+                },
+                {
+                    "Id": "max_occurrences",
+                    "Name": "Maximum occurrences",
+                    "Type": "slider_int",
+                    "Default": -1,
+                    "Options": {
+                        "Min": -1,
+                        "Max": 20
+                    },
+                    "Description": "-1 = banter can still repeat indefinitely, but will have different intervals from vanilla.\n0 = banter will never repeat.\nAny other number is the maximum number of times a banter can repeat.",
+                    "Handles": {
+                        "DescriptionHandle": "he492a0e7ea7e440d846fc05bc9629006e61f",
+                        "NameHandle": "h0565a8a854c141fe96c6fe70ed74ef347f96"
+                    }
+                }
+            ]
+        },
+        {
+            "TabId": "interval_management",
+            "TabName": "Interval management",
+            "Settings": [
+                {
+                    "Id": "first_silence_step",
+                    "Name": "First silence step",
+                    "Type": "slider_int",
+                    "Default": 5,
+                    "Options": {
+                        "Min": 0,
+                        "Max": 60
+                    },
+                    "Description": "How many seconds to delay the first banter repeat.\nThis helps alleviate the unknown time until the second occurrence.",
+                    "Handles": {
+                        "DescriptionHandle": "h96f1e4ac30174bf5a4dc38387e84d57a5fbe",
+                        "NameHandle": "h5d9262638dc042f6bd755152852d9a914cgd"
+                    }
+                },
+                {
+                    "Id": "min_interval_bonus",
+                    "Name": "Minimum interval bonus",
+                    "Type": "slider_int",
+                    "Default": 5,
+                    "Options": {
+                        "Min": 0,
+                        "Max": 300
+                    },
+                    "Description": "Time in seconds to add to the interval between banter occurrences.",
+                    "Handles": {
+                        "DescriptionHandle": "head2e53321dc44f083d9afed6b487ab34d1g",
+                        "NameHandle": "hd94d5e7c2914408a8b196e67368bc74b27fb"
+                    }
+                },
+                {
+                    "Id": "max_interval_bonus",
+                    "Name": "Maximum interval bonus",
+                    "Type": "slider_int",
+                    "Default": 300,
+                    "Options": {
+                        "Min": -1,
+                        "Max": 600
+                    },
+                    "Description": "Maximum time in seconds to add to banter intervals.\nDefault is 5 minutes.\n(-1 = will increase indefinitely with a square root function).",
+                    "Handles": {
+                        "DescriptionHandle": "ha46a48876e914f8dba4f182296ae388428a8",
+                        "NameHandle": "hd27ba737cba1466ba7947163e71829b54e23"
+                    }
+                },
+                {
+                    "Id": "random_intervals",
+                    "Name": "Use random intervals",
+                    "Type": "checkbox",
+                    "Default": true,
+                    "Description": "Enable or disable random intervals between banter occurrences.\nIf disabled, may increase with a square root function.\nIgnored if max interval bonus is -1.",
+                    "Handles": {
+                        "DescriptionHandle": "h147551d81578479392dddbaaae000a9d0e8g",
+                        "NameHandle": "hc3762f757d2c4268be74b49ed39752b309ad"
+                    },
+                    "VisibleIf": {
+                        "Conditions": [
+                            {
+                                "SettingId": "max_interval_bonus",
+                                "Operator": "!=",
+                                "ExpectedValue": "-1"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "Id": "cleanup_on_timer",
+                    "Name": "Cleanup on timer (seconds)",
+                    "Type": "slider_int",
+                    "Default": 3600,
+                    "Options": {
+                        "Min": -1,
+                        "Max": 3600
+                    },
+                    "Description": "Time in seconds to reset intervals (-1 = never cleanup based on time).\nDefault is 60 minutes.",
+                    "Handles": {
+                        "DescriptionHandle": "hf1731a924631472da4b9aecae5b169c7ee91",
+                        "NameHandle": "h1fbaf6737c534c668b095f6f80a782621838"
+                    }
+                }
+            ]
+        },
+        {
+            "TabId": "distance-based_scaling",
+            "TabName": "Distance-based scaling",
+            "Settings": [
+                {
+                    "Id": "distance_factor_scaling_enabled",
+                    "Name": "Enable distance scaling",
+                    "Type": "checkbox",
+                    "Default": true,
+                    "Description": "Enable or disable distance-based scaling of the interval bonus.",
+                    "Handles": {
+                        "DescriptionHandle": "h0776bce18c7347068a8668c28f51e5964234",
+                        "NameHandle": "hb5d564a537134722941ac148c03ce94c1424"
+                    }
+                },
+                {
+                    "Id": "distance_factor_scaling_min_distance",
+                    "Name": "Minimum distance",
+                    "Type": "slider_int",
+                    "Default": 1,
+                    "Options": {
+                        "Min": 1,
+                        "Max": 50
+                    },
+                    "Description": "Distance in meters where the maximum penalty is applied.",
+                    "Handles": {
+                        "DescriptionHandle": "h72c35f692bf74a4f9e8b1e2ce1e4f8e53g2e",
+                        "NameHandle": "h5c5e0454f088463bb669f99f5a33812fgfcf"
+                    },
+                    "VisibleIf": {
+                        "Conditions": [
+                            {
+                                "SettingId": "distance_factor_scaling_enabled",
+                                "Operator": "==",
+                                "ExpectedValue": "true"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "Id": "distance_factor_scaling_max_distance",
+                    "Name": "Maximum distance",
+                    "Type": "slider_int",
+                    "Default": 20,
+                    "Options": {
+                        "Min": 10,
+                        "Max": 100
+                    },
+                    "Description": "Distance in meters beyond which the minimum penalty is applied.",
+                    "Handles": {
+                        "DescriptionHandle": "h054d8036066a42f98e3927015119abd2c477",
+                        "NameHandle": "hfbff4ff0ae224a399961c17990af28f3cg72"
+                    },
+                    "VisibleIf": {
+                        "Conditions": [
+                            {
+                                "SettingId": "distance_factor_scaling_enabled",
+                                "Operator": "==",
+                                "ExpectedValue": "true"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "Id": "distance_factor_scaling_min_penalty_factor",
+                    "Name": "Minimum penalty factor",
+                    "Type": "slider_float",
+                    "Default": 2.0,
+                    "Options": {
+                        "Min": 1.0,
+                        "Max": 5.0
+                    },
+                    "Description": "Factor by which the interval is multiplied at or below minimum distance\n(2.0 = double the interval).",
+                    "Handles": {
+                        "DescriptionHandle": "h7041856e3798456fba0948db70671eceb2c4",
+                        "NameHandle": "hda7859766ef14e4f84871af4fca7a7451385"
+                    },
+                    "VisibleIf": {
+                        "Conditions": [
+                            {
+                                "SettingId": "distance_factor_scaling_enabled",
+                                "Operator": "==",
+                                "ExpectedValue": "true"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "Id": "distance_factor_scaling_max_penalty_factor",
+                    "Name": "Maximum penalty factor",
+                    "Type": "slider_float",
+                    "Default": 1.0,
+                    "Options": {
+                        "Min": 1.0,
+                        "Max": 2.0
+                    },
+                    "Description": "Factor by which the interval is multiplied at or beyond maximum distance\n(1.0 = no change to the interval).",
+                    "Handles": {
+                        "DescriptionHandle": "hdb74ef8e1b9848ba8067c48cb35ca121d050",
+                        "NameHandle": "hdabd6ace2e2f4efe99d086851a5b2bd51697"
+                    },
+                    "VisibleIf": {
+                        "Conditions": [
+                            {
+                                "SettingId": "distance_factor_scaling_enabled",
+                                "Operator": "==",
+                                "ExpectedValue": "true"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "TabId": "debug",
+            "TabName": "Debug",
+            "Sections": [
+                {
+                    "SectionId": "debug",
+                    "SectionName": "Debug",
+                    "Settings": [
+                        {
+                            "Id": "debug_level",
+                            "Name": "Debug level",
+                            "Type": "slider_int",
+                            "Default": 0,
+                            "Options": {
+                                "Min": 0,
+                                "Max": 2
+                            },
+                            "Description": "0 = no debug, 1 = basic debug, 2 = verbose debug.",
+                            "Handles": {
+                                "DescriptionHandle": "h89ed68a2aeb9443ca63f6df114118fa5b4e1",
+                                "NameHandle": "h24baadea05924a84b1cc3c30b34e0fc7a208"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
