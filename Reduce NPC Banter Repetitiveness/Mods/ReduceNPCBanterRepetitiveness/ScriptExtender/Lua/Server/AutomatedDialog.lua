@@ -120,6 +120,7 @@ function AutomatedDialog.HandleAutomatedDialog(dialog, instanceID)
 
     if ShouldSkipDialogWithMaxOccurrences(dialog) then
         RNPCBRPrint(2, "Ignoring dialog " .. dialog .. " with maximum occurrences.")
+        AutomatedDialog.RequestStopDialog(dialog, instanceID)
         return
     end
 
