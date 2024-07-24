@@ -30,8 +30,8 @@ function EHandlers.OnTimerFinished(timer)
 end
 
 function EHandlers.OnLevelGameplayStarted(isEditorMode, levelName)
-  if JsonConfig.FEATURES.reset_conditions.cleanup_on_timer > 0 then
-    Osi.TimerLaunch("ResetBanterIntervals", JsonConfig.FEATURES.reset_conditions.cleanup_on_timer * 1000)
+  if MCMGet("reset_on_timer") > 0 then
+    Osi.TimerLaunch("ResetBanterIntervals", MCMGet("reset_on_timer") * 1000)
   end
 end
 
