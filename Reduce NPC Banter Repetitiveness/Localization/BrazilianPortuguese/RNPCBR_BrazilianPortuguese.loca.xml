@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <contentList>
-    <content contentuid="hac6189beeac24a319733a69e9153a24edffb" version="1">Toggle the mod on/off without having to uninstall it.</content>
-    <content contentuid="h70142a25542e4dbd99234b827c55991c9f56" version="1">Banter occurring within this distance in meters to your active character will be handled by the mod.&lt;br&gt;If not within this distance, the banter will repeat as in vanilla.&lt;br&gt;3m = ~10ft</content>
-    <content contentuid="he492a0e7ea7e440d846fc05bc9629006e61f" version="1">-1 = banter can still repeat indefinitely, but will have different intervals from vanilla.&lt;br&gt;0 = banter will never repeat.&lt;br&gt;Any other number is the maximum number of times a banter can repeat.</content>
-    <content contentuid="h96f1e4ac30174bf5a4dc38387e84d57a5fbe" version="1">How many seconds to delay the first banter repeat.&lt;br&gt;This helps alleviate the unknown time until the second occurrence.</content>
-    <content contentuid="head2e53321dc44f083d9afed6b487ab34d1g" version="1">Time in seconds to add to the interval between banter occurrences.</content>
-    <content contentuid="ha46a48876e914f8dba4f182296ae388428a8" version="1">Maximum time in seconds to add to banter intervals.&lt;br&gt;Default is 5 minutes.&lt;br&gt;(-1 = will increase indefinitely with a square root function).</content>
-    <content contentuid="h147551d81578479392dddbaaae000a9d0e8g" version="1">Enable or disable random intervals between banter occurrences.&lt;br&gt;If disabled, increases with a square root function.&lt;br&gt;Ignored if max interval bonus is -1.</content>
-    <content contentuid="h0776bce18c7347068a8668c28f51e5964234" version="1">Enable or disable distance-based scaling of the interval bonus.</content>
-    <content contentuid="h72c35f692bf74a4f9e8b1e2ce1e4f8e53g2e" version="1">Distance in meters where the maximum penalty is applied.&lt;br&gt;3m = ~10ft</content>
-    <content contentuid="h054d8036066a42f98e3927015119abd2c477" version="1">Distance in meters beyond which the minimum penalty is applied.&lt;br&gt;3m = ~10ft</content>
-    <content contentuid="h7041856e3798456fba0948db70671eceb2c4" version="1">Factor by which the interval is multiplied at or below minimum distance.&lt;br&gt;(2.0 = double the interval).</content>
-    <content contentuid="hdb74ef8e1b9848ba8067c48cb35ca121d050" version="1">Factor by which the interval is multiplied at or beyond maximum distance.&lt;br&gt;(1.0 = no change to the interval).</content>
-    <content contentuid="hf1731a924631472da4b9aecae5b169c7ee91" version="1">Time in seconds to reset intervals (-1 = never cleanup based on time).&lt;br&gt;Default is 60 minutes.&lt;br&gt;Does not persist on save/load</content>
-    <content contentuid="h89ed68a2aeb9443ca63f6df114118fa5b4e1" version="1">0 = no debug, 1 = basic debug, 2 = verbose debug.</content>
-    <content contentuid="hc116181043c04c168e06ff11fce144e24136" version="1">Enabled</content>
-    <content contentuid="hca8b5a9155d4448bb0e1322d22fb366d442d" version="1">Minimum distance (meters)</content>
-    <content contentuid="h0565a8a854c141fe96c6fe70ed74ef347f96" version="1">Maximum occurrences</content>
-    <content contentuid="h5d9262638dc042f6bd755152852d9a914cgd" version="1">First silence step (seconds)</content>
-    <content contentuid="hd94d5e7c2914408a8b196e67368bc74b27fb" version="1">Minimum interval bonus (seconds)</content>
-    <content contentuid="hd27ba737cba1466ba7947163e71829b54e23" version="1">Maximum interval bonus (seconds)</content>
-    <content contentuid="hc3762f757d2c4268be74b49ed39752b309ad" version="1">Use random intervals</content>
-    <content contentuid="hb5d564a537134722941ac148c03ce94c1424" version="1">Enable distance scaling</content>
-    <content contentuid="h5c5e0454f088463bb669f99f5a33812fgfcf" version="1">Minimum distance (meters)</content>
-    <content contentuid="hfbff4ff0ae224a399961c17990af28f3cg72" version="1">Maximum distance (meters)</content>
-    <content contentuid="hda7859766ef14e4f84871af4fca7a7451385" version="1">Minimum penalty factor</content>
-    <content contentuid="hdabd6ace2e2f4efe99d086851a5b2bd51697" version="1">Maximum penalty factor</content>
-    <content contentuid="h1fbaf6737c534c668b095f6f80a782621838" version="1">Cleanup on timer (seconds)</content>
-    <content contentuid="h24baadea05924a84b1cc3c30b34e0fc7a208" version="1">Debug level</content>
+    <content contentuid="hac6189beeac24a319733a69e9153a24edffb" version="1">Ative ou desative o mod sem precisar desinstalá-lo.</content>
+    <content contentuid="h70142a25542e4dbd99234b827c55991c9f56" version="1">A conversa que ocorrer dentro desta distância em metros do seu personagem ativo será gerenciada pelo mod.&lt;br&gt;Se não estiver dentro desta distância, a conversa se repetirá como no jogo original.</content>
+    <content contentuid="he492a0e7ea7e440d846fc05bc9629006e61f" version="1">-1 = a conversa ainda pode se repetir indefinidamente, mas terá intervalos diferentes do original.&lt;br&gt;0 = a conversa nunca se repetirá.&lt;br&gt;Qualquer outro número é o número máximo de vezes que uma conversa pode se repetir.</content>
+    <content contentuid="h96f1e4ac30174bf5a4dc38387e84d57a5fbe" version="1">Quantos segundos para atrasar a primeira repetição da conversa.&lt;br&gt;Isso ajuda a aliviar o tempo desconhecido até a segunda ocorrência.</content>
+    <content contentuid="head2e53321dc44f083d9afed6b487ab34d1g" version="1">Tempo em segundos a ser adicionado ao intervalo entre as ocorrências da conversa.</content>
+    <content contentuid="ha46a48876e914f8dba4f182296ae388428a8" version="1">Tempo máximo em segundos a ser adicionado aos intervalos da conversa.&lt;br&gt;O padrão é 5 minutos.&lt;br&gt;(-1 = aumentará indefinidamente com uma função de raiz quadrada).</content>
+    <content contentuid="h147551d81578479392dddbaaae000a9d0e8g" version="1">Ative ou desative intervalos aleatórios entre as ocorrências da conversa.&lt;br&gt;Se desativado, aumenta com uma função de raiz quadrada.&lt;br&gt;Ignorado se o bônus máximo de intervalo for -1.</content>
+    <content contentuid="h0776bce18c7347068a8668c28f51e5964234" version="1">Ative ou desative o multiplicador do bônus de intervalo com base na distância.</content>
+    <content contentuid="h72c35f692bf74a4f9e8b1e2ce1e4f8e53g2e" version="1">Distância em metros onde a penalidade máxima é aplicada.</content>
+    <content contentuid="h054d8036066a42f98e3927015119abd2c477" version="1">Distância em metros além da qual a penalidade mínima é aplicada.</content>
+    <content contentuid="h7041856e3798456fba0948db70671eceb2c4" version="1">Fator pelo qual o intervalo é multiplicado na distância mínima ou abaixo.&lt;br&gt;(2.0 = dobra o intervalo).</content>
+    <content contentuid="hdb74ef8e1b9848ba8067c48cb35ca121d050" version="1">Fator pelo qual o intervalo é multiplicado na distância máxima ou além.&lt;br&gt;(1.0 = sem alteração no intervalo).</content>
+    <content contentuid="hf1731a924631472da4b9aecae5b169c7ee91" version="1">Tempo em segundos para redefinir intervalos (-1 = nunca redefinir com base no tempo).&lt;br&gt;O padrão é 60 minutos.&lt;br&gt;Não persiste ao salvar/carregar.</content>
+    <content contentuid="h89ed68a2aeb9443ca63f6df114118fa5b4e1" version="1">0 = sem depuração, 1 = depuração básica, 2 = depuração detalhada.</content>
+    <content contentuid="hc116181043c04c168e06ff11fce144e24136" version="1">Ativado</content>
+    <content contentuid="hca8b5a9155d4448bb0e1322d22fb366d442d" version="1">Distância mínima (metros)</content>
+    <content contentuid="h0565a8a854c141fe96c6fe70ed74ef347f96" version="1">Máximas ocorrências</content>
+    <content contentuid="h5d9262638dc042f6bd755152852d9a914cgd" version="1">Primeiro passo de silêncio (segundos)</content>
+    <content contentuid="hd94d5e7c2914408a8b196e67368bc74b27fb" version="1">Bônus mínimo de intervalo (segundos)</content>
+    <content contentuid="hd27ba737cba1466ba7947163e71829b54e23" version="1">Bônus máximo de intervalo (segundos)</content>
+    <content contentuid="hc3762f757d2c4268be74b49ed39752b309ad" version="1">Usar intervalos aleatórios</content>
+    <content contentuid="hb5d564a537134722941ac148c03ce94c1424" version="1">Ativar multiplicador de intervalos com base em distância</content>
+    <content contentuid="h5c5e0454f088463bb669f99f5a33812fgfcf" version="1">Distância mínima (metros)</content>
+    <content contentuid="hfbff4ff0ae224a399961c17990af28f3cg72" version="1">Distância máxima (metros)</content>
+    <content contentuid="hda7859766ef14e4f84871af4fca7a7451385" version="1">Fator de penalidade de distância mínima</content>
+    <content contentuid="hdabd6ace2e2f4efe99d086851a5b2bd51697" version="1">Fator de penalidade de distância máxima</content>
+    <content contentuid="h1fbaf6737c534c668b095f6f80a782621838" version="1">Redefinir intervalos no temporizador (segundos)</content>
+    <content contentuid="h24baadea05924a84b1cc3c30b34e0fc7a208" version="1">Nível de depuração</content>
 </contentList>
