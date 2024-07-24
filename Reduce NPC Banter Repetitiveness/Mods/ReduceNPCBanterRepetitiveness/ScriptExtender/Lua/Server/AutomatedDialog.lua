@@ -92,7 +92,7 @@ function ShouldSkipDialogWithMaxOccurrences(dialog)
 
     if maxOccurrences == -1 then
         return false
-    elseif AutomatedDialog.dialogs and AutomatedDialog.dialogs[dialog] and AutomatedDialog.dialogs[dialog].instances and #AutomatedDialog.dialogs[dialog].instances > maxOccurrences then
+    elseif AutomatedDialog.dialogs and AutomatedDialog.dialogs[dialog] and AutomatedDialog.dialogs[dialog].instances and #AutomatedDialog.dialogs[dialog].instances >= maxOccurrences then
         return true
     end
 end
