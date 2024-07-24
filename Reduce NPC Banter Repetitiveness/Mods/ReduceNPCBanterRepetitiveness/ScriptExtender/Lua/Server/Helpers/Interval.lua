@@ -11,7 +11,9 @@ local function getRandomWaitTime()
     return getRandomInterval(minInterval, maxInterval)
 end
 
-local function ensureWaitTimeIsInRange(waitTime, dialog)
+--- Ensure the wait time is within the defined range.
+---@param waitTime integer The wait time in milliseconds.
+local function ensureWaitTimeIsInRange(waitTime)
     local minWaitTime = MCMGet("min_interval_bonus")
     local maxWaitTime = MCMGet("max_interval_bonus")
 
@@ -70,30 +72,34 @@ local function calculateWaitFactorScaling(waitTime, distanceToDialog)
     -- Interpolate penalty factor based on logarithmically scaled distance
     local penaltyFactor = minPenaltyFactor + (maxPenaltyFactor - minPenaltyFactor) * logDistance
 
+    RNPCBRDebug(1, "Penalty factor for distance ~" .. string.format("%.1f", distanceToDialog) .. "m is ~x" .. string.format("%.1f", penaltyFactor) .. ".")
+
     -- Apply the penalty factor to the wait time
     return waitTime * penaltyFactor
 end
 
 function Interval.GetWaitTime(dialog, distanceToDialog)
-    local shouldUseRandomInterval = MCMGet("random_intervals") and MCMGet("max_occurrences") ~= -1
+    local shouldUseRandomInterval = MCMGet("random_intervals") and MCMGet("max_interval_bonus") > 0
     if not AutomatedDialog.dialogs or not AutomatedDialog.dialogs[dialog] or not AutomatedDialog.dialogs[dialog].instances then
         return 0
     end
 
-    local intervalTime = 0
+    local waitTime = 0
     if shouldUseRandomInterval then
-        intervalTime = getRandomWaitTime()
+        RNPCBRDebug(2, "Using random interval for " .. dialog)
+        waitTime = getRandomWaitTime()
     else
-        intervalTime = piecewiseFunction(#AutomatedDialog.dialogs[dialog].instances or 0)
+        RNPCBRDebug(2, "Using piecewise function for " .. dialog)
+        waitTime = piecewiseFunction(#AutomatedDialog.dialogs[dialog].instances or 0)
     end
 
-    RNPCBRDebug(1, "Wait time for " .. dialog .. " is " .. intervalTime .. " seconds.")
-
-    local waitTime = intervalTime * 1000
+    RNPCBRDebug(2, "Wait/interval time for " .. dialog .. " is " .. waitTime .. " seconds.")
 
     waitTime = calculateWaitFactorScaling(waitTime, distanceToDialog)
 
     waitTime = ensureWaitTimeIsInRange(waitTime, dialog)
+
+    RNPCBRDebug(1, "Final wait time for " .. dialog .. " is ~" .. math.floor(waitTime) .. " seconds.")
 
     return waitTime
 end

@@ -62,7 +62,7 @@ function AutomatedDialog.BlockOrAllowDialog(dialog, instanceID, involvedNPCsDist
 
         -- Get wait time for this dialog based on the number of instances so far, using a piecewise function/random interval, and the distance
         local distanceToDialog = involvedNPCsDistance[1].Distance
-        local waitTime = Interval.GetWaitTime(dialog, distanceToDialog)
+        local waitTime = Interval.GetWaitTime(dialog, distanceToDialog) * 1000
         -- REFACTOR: simplify/move this logic to a separate function
         if elapsed >= waitTime then
             -- Enough time has elapsed, update lastAllowed timestamp and allow this dialog.
@@ -75,7 +75,7 @@ function AutomatedDialog.BlockOrAllowDialog(dialog, instanceID, involvedNPCsDist
         else
             -- Not enough time has elapsed, request to stop this dialog instance.
             RNPCBRPrint(2,
-                "Postponing dialog " .. dialog .. " for " .. math.floor((waitTime - elapsed) / 1000) .. " more seconds.")
+                "Postponing dialog " .. dialog .. " for " .. math.floor((waitTime - elapsed) ) .. " more seconds.")
             AutomatedDialog.RequestStopDialog(dialog, instanceID)
         end
     end

@@ -41,23 +41,25 @@ end
 
 function EHandlers.HandleMCMSettingChange(call, payload)
   -- Make sure the ranges are consistent
-  local function adjustDistanceSettings()
-    local minDistance = MCMGet("min_distance")
-    local maxDistance = MCMGet("max_distance")
-    if minDistance > maxDistance then
-      MCMSet("max_distance", minDistance)
-    elseif maxDistance < minDistance then
-      MCMSet("min_distance", maxDistance)
+  local function adjustDistanceSettings(changedSetting)
+    local minDistanceForFactor = MCMGet("distance_factor_scaling_min_distance")
+    local maxDistanceForFactor = MCMGet("distance_factor_scaling_max_distance")
+
+    if changedSetting == "min_distance" and minDistanceForFactor > maxDistanceForFactor then
+      MCMSet("max_distance", minDistanceForFactor)
+    elseif changedSetting == "max_distance" and maxDistanceForFactor < minDistanceForFactor then
+      MCMSet("min_distance", maxDistanceForFactor)
     end
   end
 
   -- Make sure the ranges are consistent
-  local function adjustIntervalSettings()
+  local function adjustIntervalSettings(changedSetting)
     local minInterval = MCMGet("min_interval_bonus")
     local maxInterval = MCMGet("max_interval_bonus")
-    if minInterval > maxInterval then
+
+    if changedSetting == "min_interval_bonus" and minInterval > maxInterval then
       MCMSet("max_interval_bonus", minInterval)
-    elseif maxInterval < minInterval then
+    elseif changedSetting == "max_interval_bonus" and maxInterval < minInterval then
       MCMSet("min_interval_bonus", maxInterval)
     end
   end
@@ -71,9 +73,9 @@ function EHandlers.HandleMCMSettingChange(call, payload)
     RNPCBRDebug(0, "Setting debug level to " .. data.value)
     RNPCBRPrinter.DebugLevel = data.value
   elseif data.settingId == "min_distance" or data.settingId == "max_distance" then
-    adjustDistanceSettings()
+    adjustDistanceSettings(data.settingId)
   elseif data.settingId == "min_interval_bonus" or data.settingId == "max_interval_bonus" then
-    adjustIntervalSettings()
+    adjustIntervalSettings(data.settingId)
   end
 end
 
