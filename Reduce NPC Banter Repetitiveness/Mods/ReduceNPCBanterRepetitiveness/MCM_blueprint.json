@@ -57,7 +57,7 @@
                     "Id": "first_silence_step",
                     "Name": "First silence step (seconds)",
                     "Type": "slider_int",
-                    "Default": 5,
+                    "Default": 8,
                     "Options": {
                         "Min": 0,
                         "Max": 60
@@ -72,7 +72,7 @@
                     "Id": "min_interval_bonus",
                     "Name": "Minimum interval bonus (seconds)",
                     "Type": "slider_int",
-                    "Default": 5,
+                    "Default": 8,
                     "Options": {
                         "Min": 0,
                         "Max": 300
