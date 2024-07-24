@@ -12,7 +12,7 @@
     <content contentuid="h054d8036066a42f98e3927015119abd2c477" version="1">Distance in meters beyond which the minimum penalty is applied.&lt;br&gt;3m = ~10ft</content>
     <content contentuid="h7041856e3798456fba0948db70671eceb2c4" version="1">Factor by which the interval is multiplied at or below minimum distance.&lt;br&gt;(2.0 = double the interval).</content>
     <content contentuid="hdb74ef8e1b9848ba8067c48cb35ca121d050" version="1">Factor by which the interval is multiplied at or beyond maximum distance.&lt;br&gt;(1.0 = no change to the interval).</content>
-    <content contentuid="hf1731a924631472da4b9aecae5b169c7ee91" version="1">Time in seconds to reset intervals (-1 = never cleanup based on time).&lt;br&gt;Default is 60 minutes.&lt;br&gt;Does not persist on save/load</content>
+    <content contentuid="hf1731a924631472da4b9aecae5b169c7ee91" version="1">Time in seconds to reset intervals (-1 = never reset based on time).&lt;br&gt;Default is 60 minutes.&lt;br&gt;Does not persist on save/load.</content>
     <content contentuid="h89ed68a2aeb9443ca63f6df114118fa5b4e1" version="1">0 = no debug, 1 = basic debug, 2 = verbose debug.</content>
     <content contentuid="hc116181043c04c168e06ff11fce144e24136" version="1">Enabled</content>
     <content contentuid="hca8b5a9155d4448bb0e1322d22fb366d442d" version="1">Minimum distance (meters)</content>
@@ -24,8 +24,8 @@
     <content contentuid="hb5d564a537134722941ac148c03ce94c1424" version="1">Enable distance scaling</content>
     <content contentuid="h5c5e0454f088463bb669f99f5a33812fgfcf" version="1">Minimum distance (meters)</content>
     <content contentuid="hfbff4ff0ae224a399961c17990af28f3cg72" version="1">Maximum distance (meters)</content>
-    <content contentuid="hda7859766ef14e4f84871af4fca7a7451385" version="1">Minimum penalty factor</content>
-    <content contentuid="hdabd6ace2e2f4efe99d086851a5b2bd51697" version="1">Maximum penalty factor</content>
-    <content contentuid="h1fbaf6737c534c668b095f6f80a782621838" version="1">Cleanup on timer (seconds)</content>
+    <content contentuid="hda7859766ef14e4f84871af4fca7a7451385" version="1">Minimum distance penalty factor</content>
+    <content contentuid="hdabd6ace2e2f4efe99d086851a5b2bd51697" version="1">Maximum distance penalty factor</content>
+    <content contentuid="h1fbaf6737c534c668b095f6f80a782621838" version="1">Reset intervals on timer (seconds)</content>
     <content contentuid="h24baadea05924a84b1cc3c30b34e0fc7a208" version="1">Debug level</content>
 </contentList>

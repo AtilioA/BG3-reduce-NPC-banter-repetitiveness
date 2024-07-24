@@ -55,7 +55,7 @@
             "Settings": [
                 {
                     "Id": "first_silence_step",
-                    "Name": "First silence step",
+                    "Name": "First silence step (seconds)",
                     "Type": "slider_int",
                     "Default": 5,
                     "Options": {
@@ -70,7 +70,7 @@
                 },
                 {
                     "Id": "min_interval_bonus",
-                    "Name": "Minimum interval bonus",
+                    "Name": "Minimum interval bonus (seconds)",
                     "Type": "slider_int",
                     "Default": 5,
                     "Options": {
@@ -85,7 +85,7 @@
                 },
                 {
                     "Id": "max_interval_bonus",
-                    "Name": "Maximum interval bonus",
+                    "Name": "Maximum interval bonus (seconds)",
                     "Type": "slider_int",
                     "Default": 300,
                     "Options": {
@@ -119,15 +119,15 @@
                     }
                 },
                 {
-                    "Id": "cleanup_on_timer",
-                    "Name": "Cleanup on timer (seconds)",
+                    "Id": "reset_on_timer",
+                    "Name": "Reset intervals on timer (seconds)",
                     "Type": "slider_int",
                     "Default": 3600,
                     "Options": {
                         "Min": -1,
                         "Max": 3600
                     },
-                    "Description": "Time in seconds to reset intervals (-1 = never cleanup based on time).\nDefault is 60 minutes.",
+                    "Description": "Time in seconds to reset intervals (-1 = never reset based on time).\nDefault is 60 minutes.",
                     "Handles": {
                         "DescriptionHandle": "hf1731a924631472da4b9aecae5b169c7ee91",
                         "NameHandle": "h1fbaf6737c534c668b095f6f80a782621838"
@@ -152,7 +152,7 @@
                 },
                 {
                     "Id": "distance_factor_scaling_min_distance",
-                    "Name": "Minimum distance",
+                    "Name": "Minimum distance (meters)",
                     "Type": "slider_int",
                     "Default": 1,
                     "Options": {
@@ -176,7 +176,7 @@
                 },
                 {
                     "Id": "distance_factor_scaling_max_distance",
-                    "Name": "Maximum distance",
+                    "Name": "Maximum distance (meters)",
                     "Type": "slider_int",
                     "Default": 20,
                     "Options": {
@@ -200,11 +200,11 @@
                 },
                 {
                     "Id": "distance_factor_scaling_min_penalty_factor",
-                    "Name": "Minimum penalty factor",
+                    "Name": "Minimum distance penalty factor",
                     "Type": "slider_float",
                     "Default": 2.0,
                     "Options": {
-                        "Min": 1.0,
+                        "Min": 0.0,
                         "Max": 5.0
                     },
                     "Description": "Factor by which the interval is multiplied at or below minimum distance\n(2.0 = double the interval).",
@@ -224,7 +224,7 @@
                 },
                 {
                     "Id": "distance_factor_scaling_max_penalty_factor",
-                    "Name": "Maximum penalty factor",
+                    "Name": "Maximum distance penalty factor",
                     "Type": "slider_float",
                     "Default": 1.0,
                     "Options": {
