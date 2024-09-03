@@ -19,7 +19,7 @@
                 },
                 {
                     "Id": "min_distance",
-                    "Name": "Minimum distance (meters)",
+                    "Name": "Maximum distance (meters)",
                     "Type": "slider_int",
                     "Default": 24,
                     "Options": {
