@@ -32,7 +32,7 @@ function SubscribedEvents:SubscribeToEvents()
 
   Ext.Osiris.RegisterListener("LevelGameplayStarted", 2, "after", conditionalWrapper(EHandlers.OnLevelGameplayStarted))
 
-  Ext.RegisterNetListener("MCM_Saved_Setting", EHandlers.HandleMCMSettingChange)
+  Ext.ModEvents.BG3MCM['MCM_Setting_Saved']:Subscribe(EHandlers.HandleMCMSettingChange)
 end
 
 return SubscribedEvents
