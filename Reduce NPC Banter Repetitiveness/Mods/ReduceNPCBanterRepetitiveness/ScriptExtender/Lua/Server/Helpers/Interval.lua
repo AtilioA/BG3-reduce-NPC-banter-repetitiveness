@@ -97,7 +97,7 @@ function Interval.GetWaitTime(dialog, distanceToDialog)
 
     waitTime = calculateWaitFactorScaling(waitTime, distanceToDialog)
 
-    waitTime = ensureWaitTimeIsInRange(waitTime, dialog)
+    waitTime = ensureWaitTimeIsInRange(waitTime)
 
     RNPCBRDebug(1, "Final wait time for " .. dialog .. " is ~" .. math.floor(waitTime) .. " seconds.")
 

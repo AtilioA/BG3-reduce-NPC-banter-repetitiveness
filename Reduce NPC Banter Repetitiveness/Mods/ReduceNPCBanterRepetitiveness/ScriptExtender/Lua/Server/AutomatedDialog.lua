@@ -14,7 +14,12 @@ end
 ---@param dialog string
 ---@param instanceID integer
 function AutomatedDialog.RequestStopDialog(dialog, instanceID)
-    Osi.DialogRequestStopForDialog(dialog, Osi.DialogGetInvolvedNPC(instanceID, 1))
+    local involvedNPC = Osi.DialogGetInvolvedNPC(instanceID, 1)
+    if involvedNPC then
+        Osi.DialogRequestStopForDialog(dialog, involvedNPC)
+    else
+        RNPCBRPrint(2, "No involved NPC found for dialog " .. dialog .. " with instance ID " .. instanceID)
+    end
 end
 
 function AutomatedDialog.InitializeDialog(dialog, instanceID, currentTime)
@@ -34,7 +39,7 @@ function AutomatedDialog.HandleDialogSecondOccurrence(dialog, instanceID, curren
     AutomatedDialog.dialogs[dialog].silencePeriod = Interval.ElapsedTime(AutomatedDialog.dialogs[dialog].lastAllowed +
         AutomatedDialog.dialogs[dialog].duration)
     AutomatedDialog.dialogs[dialog].lastAllowed = currentTime
-    RNPCBRDebug(0,
+    RNPCBRDebug(1,
         "Silence period for " .. dialog .. " is " .. AutomatedDialog.dialogs[dialog].silencePeriod .. " milliseconds.")
 
     -- local shouldPostponeSecondOccurrence = MCMGet("first_silence_step")
@@ -75,13 +80,13 @@ function AutomatedDialog.BlockOrAllowDialog(dialog, instanceID, involvedNPCsDist
         else
             -- Not enough time has elapsed, request to stop this dialog instance.
             RNPCBRPrint(2,
-                "Postponing dialog " .. dialog .. " for " .. math.floor((waitTime - elapsed) ) .. " more seconds.")
+                "Postponing dialog " .. dialog .. " for " .. math.floor((waitTime - elapsed)) .. " more seconds.")
             AutomatedDialog.RequestStopDialog(dialog, instanceID)
         end
     end
 end
 
-function ShouldSkipDialogWithMaxOccurrences(dialog)
+function AutomatedDialog.ShouldSkipDialogWithMaxOccurrences(dialog)
     -- local vendorOptionsEnabled = MCMGet("vendor_options_enabled")
     -- local involvesTrader = false -- AutomatedDialog.DialogInvolvesTrader(dialog)
 
@@ -118,7 +123,7 @@ function AutomatedDialog.HandleAutomatedDialog(dialog, instanceID)
         return
     end
 
-    if ShouldSkipDialogWithMaxOccurrences(dialog) then
+    if AutomatedDialog.ShouldSkipDialogWithMaxOccurrences(dialog) then
         RNPCBRPrint(2, "Ignoring dialog " .. dialog .. " with maximum occurrences.")
         AutomatedDialog.RequestStopDialog(dialog, instanceID)
         return
