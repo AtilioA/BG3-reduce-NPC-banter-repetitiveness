@@ -64,18 +64,17 @@ function EHandlers.HandleMCMSettingChange(call, payload)
     end
   end
 
-  local data = Ext.Json.Parse(payload)
-  if not data or data.modGUID ~= ModuleUUID or not data.settingId then
+  if not payload or payload.modUUID ~= ModuleUUID or not payload.settingId then
     return
   end
 
-  if data.settingId == "debug_level" then
-    RNPCBRDebug(0, "Setting debug level to " .. data.value)
-    RNPCBRPrinter.DebugLevel = data.value
-  elseif data.settingId == "min_distance" or data.settingId == "max_distance" then
-    adjustDistanceSettings(data.settingId)
-  elseif data.settingId == "min_interval_bonus" or data.settingId == "max_interval_bonus" then
-    adjustIntervalSettings(data.settingId)
+  if payload.settingId == "debug_level" then
+    RNPCBRDebug(0, "Setting debug level to " .. payload.value)
+    RNPCBRPrinter.DebugLevel = payload.value
+  elseif payload.settingId == "min_distance" or payload.settingId == "max_distance" then
+    adjustDistanceSettings(payload.settingId)
+  elseif payload.settingId == "min_interval_bonus" or payload.settingId == "max_interval_bonus" then
+    adjustIntervalSettings(payload.settingId)
   end
 end
 
