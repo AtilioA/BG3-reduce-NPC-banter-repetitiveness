@@ -10,6 +10,18 @@ function AutomatedDialog.ResetBanterIntervals()
     AutomatedDialog.should_handle = {}
 end
 
+--- Function to check if the list of NPCs involved in a dialog are in camp.
+---@param NPCs GUIDSTRING[] A table of NPCs involved in the dialog.
+local function areNPCsInCamp(NPCs)
+    for _, npc in pairs(NPCs) do
+        if VCHelpers.Character:IsCharacterInCamp(npc) then
+            return true
+        end
+    end
+
+    return false
+end
+
 --- Placeholder for logic to request stopping a dialog instance.
 ---@param dialog string
 ---@param instanceID integer
@@ -117,6 +129,10 @@ function AutomatedDialog.HandleAutomatedDialog(dialog, instanceID)
     end
 
     local involvedNPCs = VCHelpers.Dialog:GetInvolvedNPCs(instanceID)
+    if areNPCsInCamp(involvedNPCs) then
+        RNPCBRPrint(2, "Ignoring dialog " .. dialog .. " involving characters in camp.")
+        return
+    end
 
     if VCHelpers.Dialog:CheckIfPartyInvolved(involvedNPCs) then
         RNPCBRPrint(2, "Ignoring dialog " .. dialog .. " involving party members.")
